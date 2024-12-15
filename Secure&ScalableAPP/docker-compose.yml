@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  app:
+    build: ./app
+    networks:
+      backend:
+        ipv4_address: 192.168.1.100
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      frontend:
+        ipv4_address: 192.168.2.100
+
+networks:
+  backend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+  frontend:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.2.0/24
